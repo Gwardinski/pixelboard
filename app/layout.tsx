@@ -3,7 +3,7 @@ import "./globals.css";
 import { Border } from "@/components/Border";
 import { H1 } from "@/components/ui/typography";
 import { QueryProvider } from "@/config/query-provider";
-import { ResetButton } from "@/components/ResetButton";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "PixelBoard",
@@ -17,25 +17,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="w-full min-h-screen flex flex-col items-center bg-purple-50 dark:bg-purple-950 overflow-x-hidden">
+      <body className="w-full min-h-screen flex flex-col items-center overflow-x-hidden bg-pattern">
+        <div className="fixed top-0 left-0 -z-10 h-screen min-h-screen w-screen object-cover backdrop-blur-2xl" />
         <QueryProvider>
-          <header className="h-20 flex items-center justify-center bg-white w-full">
-            <H1>PixelBoard</H1>
-            <ResetButton />
+          <header className="h-20 flex items-center flex-col justify-center w-full glass dark:dark-glass">
+            <Link
+              href="/"
+              className="flex flex-col items-center justify-center"
+            >
+              <>
+                <H1>PixelBoard</H1>
+                <Border />
+              </>
+            </Link>
           </header>
 
-          <Border />
+          {children}
 
-          <div className="pb-8">{children}</div>
-
-          <footer className="mt-auto h-10 bg-white w-full flex items-center justify-center">
+          <footer className="mt-auto h-10 w-full flex items-center justify-center glass dark:dark-glass">
             <a
               href="https://gmac.dev"
               target="_blank"
               className="hover:underline"
             >
-              @Gwardinski
+              gmac.dev
             </a>
+            {/* <TailwindBreakpoints /> */}
           </footer>
         </QueryProvider>
       </body>

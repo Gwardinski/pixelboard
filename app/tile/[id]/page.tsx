@@ -7,6 +7,8 @@ import { colorToCss } from "@/config/formatters";
 import { useTile, useUpdatePixel } from "@/config/query-hooks";
 import Link from "next/link";
 import { use, useState } from "react";
+import { H2, H2Description } from "@/components/ui/typography";
+import { ScalableTile } from "@/components/Scalable";
 
 export default function TilePage({
   params,
@@ -26,14 +28,16 @@ export default function TilePage({
   const { tile } = data;
 
   return (
-    <section className="flex flex-col items-center w-fit max-w-6xl overflow-hidden">
-      <header className="flex items-center justify-between py-4 w-full text-left px-2">
+    <section className="flex flex-col items-center py-8 px-4 gap-4 max-w-6xl">
+      <header className="flex py-4 w-full items-center text-left px-5 glass dark:dark-glass rounded-lg">
         <div className="flex flex-col">
-          <h2 className="text-2xl font-bold">Tile {tile?.id}</h2>
-          <p>Select a Color, then click a pixel to fill it in</p>
+          <H2 className="text-2xl font-bold">Tile {tile?.id}</H2>
+          <H2Description>
+            Select a Color, then click a pixel to fill it in
+          </H2Description>
         </div>
         <Link href={"/"} className="ml-auto">
-          <Button>Close</Button>
+          <Button variant="default">Back</Button>
         </Link>
       </header>
       <ColorButtons />
@@ -52,7 +56,7 @@ const PixelGrid: React.FC<{ tileId: string }> = ({ tileId }) => {
   const { pixels } = tile;
 
   return (
-    <div className="no-scrollbar flex flex-col max-w-5xl px-2 lg:px-0 w-screen items-start lg:items-center overflow-auto">
+    <div className="no-scrollbar flex flex-col max-w-5xl px-2 w-screen items-center overflow-auto">
       {pixels.map((pixel, i) => (
         <div key={`pixel-row-${i}`} className="flex overflow-hidden">
           {pixel.map((pixel) => (
@@ -77,31 +81,34 @@ const PixelItem: React.FC<{
     return null;
   }
 
-  const { pixels } = tile;
+  function handleClick() {
+    if (!tile || isPending) return;
+    updatePixel({
+      sortedPixels: tile.pixels.flat(),
+      selectedColor,
+      pixelId: pixel.id,
+    });
+  }
 
   return (
-    <button
-      onClick={() =>
-        updatePixel({
-          sortedPixels: pixels.flat(),
-          selectedColor,
-          pixelId: pixel.id,
-        })
-      }
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`flex flex-col hover:z-10 h-8 w-8 sm:h-16 sm:w-16 hover:opacity-50 hover:outline-dashed ${
-        isPending && "cursor-wait hover:opacity-100 hover:outline-none"
-      }
+    <ScalableTile>
+      <button
+        onClick={handleClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`flex flex-col hover:z-10 w-full h-full hover:opacity-50 hover:outline-dashed ${
+          isPending && "cursor-wait hover:opacity-100 hover:outline-none"
+        }
       ${isPending && "animate-spin opacity-50"}
       `}
-      style={{
-        background:
-          isHovered && !isPending
-            ? colorToCss(selectedColor)
-            : colorToCss(pixel.color),
-      }}
-    />
+        style={{
+          background:
+            isHovered && !isPending
+              ? colorToCss(selectedColor)
+              : colorToCss(pixel.color),
+        }}
+      />
+    </ScalableTile>
   );
 };
 

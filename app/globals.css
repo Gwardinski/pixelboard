@@ -52,3 +52,9 @@
   border-bottom: 1px solid rgb(255 255 255 / 20%);
   border-left: 1px solid rgb(255 255 255 / 20%);
 }
+
+@utility bg-pattern {
+  background-image: url("/bg.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}

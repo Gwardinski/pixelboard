@@ -112,8 +112,11 @@ export function useUpdatePixel(tileId: string) {
 export function useResetGrid() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => {
-      const response = await fetch("/api/reset", { method: "POST" });
+    mutationFn: async (code: string) => {
+      const response = await fetch("/api/reset", {
+        method: "POST",
+        body: JSON.stringify({ code }),
+      });
       if (!response.ok) {
         throw new Error("Failed to reset grid");
       }

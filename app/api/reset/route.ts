@@ -3,7 +3,13 @@ import { tiles } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { create16By16GridForTiles } from "@/config/seed";
 
-export async function POST() {
+export async function POST(request: Request) {
+  const { code } = await request.json();
+
+  if (code !== process.env.NEXT_PUBLIC_RESET_CODE) {
+    return NextResponse.json({ error: "Invalid code" }, { status: 401 });
+  }
+
   try {
     await db.delete(tiles);
 
